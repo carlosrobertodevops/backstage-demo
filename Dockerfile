@@ -1,14 +1,16 @@
+## PACKAGES
 FROM node:20-bookworm-slim AS packages
 
 WORKDIR /app
-ARG SRC=backstage
+ARG SRC=src
+
 COPY $SRC/package.json $SRC/yarn.lock ./
 COPY $SRC/.yarn ./.yarn
 COPY $SRC/.yarnrc.yml ./
 COPY $SRC/packages packages
 RUN find packages \! -name "package.json" -mindepth 2 -maxdepth 2 -exec rm -rf {} \+
 
-
+## BUILD
 FROM node:20-bookworm-slim AS build
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -27,7 +29,8 @@ COPY --from=packages --chown=node:node /app/.yarn ./.yarn
 COPY --from=packages --chown=node:node /app/.yarnrc.yml  ./
 RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid=1000 \
     yarn install --immutable
-ARG SRC=backstage
+
+ARG SRC=src
 COPY --chown=node:node $SRC/. .
 RUN yarn tsc
 RUN yarn --cwd packages/backend build
@@ -36,6 +39,7 @@ RUN mkdir packages/backend/dist/skeleton packages/backend/dist/bundle \
     && tar xzf packages/backend/dist/bundle.tar.gz -C packages/backend/dist/bundle
 
 
+## SLIM
 FROM node:20-bookworm-slim
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -56,7 +60,8 @@ RUN --mount=type=cache,target=/home/node/.cache/yarn,sharing=locked,uid=1000,gid
     yarn workspaces focus --all --production && rm -rf "$(yarn cache clean)"
 COPY --from=build --chown=node:node /app/packages/backend/dist/bundle/ ./
 COPY --chown=node:node app-config*.yaml ./
-ARG SRC=backstage
+
+ARG SRC=src
 COPY --chown=node:node $SRC/examples ./examples
 ENV NODE_ENV=production
 ENV NODE_OPTIONS="--no-node-snapshot"

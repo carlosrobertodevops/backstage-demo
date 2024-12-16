@@ -8,19 +8,19 @@ backend:
   listen:
     port: 7007
   csp:
-    connect-src: ["'self'", 'http:', 'https:']
+    connect-src: [ "'self'", 'http:', 'https:' ]
     upgrade-insecure-requests: false
   cors:
     origin: http://localhost:3000
-    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    methods: [ GET, HEAD, PATCH, POST, PUT, DELETE ]
     credentials: true
   database:
     client: better-sqlite3
     connection: ':memory:'
 integrations:
   github:
-    - host: github.com
-      token: ${GITHUB_TOKEN}
+  - host: github.com
+    token: ${GITHUB_TOKEN}
 proxy:
 techdocs:
   builder: 'local'
@@ -37,18 +37,18 @@ catalog:
     entityFilename: catalog-info.yaml
     pullRequestBranchName: backstage-integration
   rules:
-    - allow: [Component, System, API, Resource, Location, Template]
+  - allow: [ Component, System, API, Resource, Location, Template ]
   locations:
-    - type: file
-      target: ../../examples/entities.yaml
-    - type: file
-      target: ../../examples/template/template.yaml
-      rules:
-        - allow: [Template]
-    - type: file
-      target: ../../examples/org.yaml
-      rules:
-        - allow: [User, Group]
+  - type: file
+    target: ../../examples/entities.yaml
+  - type: file
+    target: ../../examples/template/template.yaml
+    rules:
+    - allow: [ Template ]
+  - type: file
+    target: ../../examples/org.yaml
+    rules:
+    - allow: [ User, Group ]
   providers:
     github:
       catalogInfo:
@@ -58,8 +58,8 @@ catalog:
           branch: main
           repository: backstage-demo
         schedule:
-          frequency: {minutes: 30}
-          timeout: {minutes: 3}
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
       templates:
         organization: ${GITHUB_USER}
         catalogPath: /backstage-template.yaml
@@ -67,13 +67,13 @@ catalog:
           branch: main
           repository: backstage-demo
         schedule:
-          frequency: {minutes: 30}
-          timeout: {minutes: 3}
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
 kubernetes:
   serviceLocatorMethod:
     type: 'multiTenant'
   clusterLocatorMethods:
-    - type: 'config'
-      clusters: []
+  - type: 'config'
+    clusters: []
 permission:
   enabled: true

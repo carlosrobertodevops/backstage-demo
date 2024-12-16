@@ -2,10 +2,10 @@ backend:
   database:
     client: pg
     connection:
-      host: ${DB_HOST}
-      port: 5432
-      user: ${user}
-      password: ${password}
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
 catalog:
   providers:
     github:

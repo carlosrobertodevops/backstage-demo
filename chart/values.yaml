@@ -1,6 +1,6 @@
 mode: production
 image:
-  repository: ghcr.io/vfarcic/backstage-demo
+  repository: ghcr.io/carlosrobertodevops/backstage-demo
   tag: v0.0.1
 db:
   instances: 1
